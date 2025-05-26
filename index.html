@@ -1430,16 +1430,14 @@ function searchItem() {
         const itemCell = rows[i].cells[0];
         const itemName = itemCell.innerText.toLowerCase();
 
-        // Remove highlight if the search input is empty or does not match
-        if (input === "" || !itemName.includes(input)) {
-            rows[i].classList.remove('highlight');
-        } 
-        // Highlight if the item name matches the input
-        else if (itemName.includes(input)) {
-            rows[i].classList.add('highlight');
+        if (input === "" || itemName.includes(input)) {
+            rows[i].style.display = ""; // Show matching or all if input is empty
+        } else {
+            rows[i].style.display = "none"; // Hide non-matching rows
         }
     }
 }
+
 
 </script>
 
