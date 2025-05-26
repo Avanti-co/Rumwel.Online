@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bottle Count Tracker</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.3s ease;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f0f4f8; /* light pastel blue */
+    color: #333;
+  }
+
+  /* Header */
+  header {
+    background: rgba(255, 255, 255, 0.9);
+    color: #2176bd; /* calm blue */
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    
+    
+    
+    position: sticky;
+    top: 0;
+    z-index: 1002;
+    box-shadow: 0 2px 10px rgba(33, 118, 189, 0.15);
+    backdrop-filter: saturate(180%) blur(8px);
+padding-right: 10px;
+background: rgba(0, 0, 0, 0.9);
+    color: #00e5ff;
+
+  }
+
+  .menu-btn {
+    font-size: 1.8rem;
+    background: none;
+    color: #2176bd;
+    border: none;
+    cursor: pointer;
+left: 10px;
+  }
+
+  /* Sidebar */
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: -500px;
+    width: 500px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: #e0f7fa;
+    padding-top: 60px;
+    transition: 0.4s ease;
+    box-shadow: 4px 0 20px rgba(0, 255, 255, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+    backdrop-filter: blur(6px);
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .side-menu a {
+    display: block;
+    padding: 20px 30px;
+    text-decoration: none;
+    color: #b2ebf2;
+    font-size: 30px;
+    font-weight: 500;
+    transition: 0.3s;
+    position: relative;
+  }
+
+  .side-menu a:hover {
+    background: rgba(29, 233, 182, 0.1);
+    color: #ffffff;
+    transform: translateX(10px);
+  }
+
+  .side-menu.active {
+    left: 0;
+  }
+
+ 
+
+  .side-menu a:hover {
+    background: #d0e5fa;
+    color: #0b3d91;
+    transform: translateX(8px);
+  }
+
+  /* Overlay for side menu */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%; width: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 999;
+    backdrop-filter: blur(4px);
+  }
+
+  .overlay.active {
+    display: block;
+  }
+
+  /* Content */
+  h2 {
+    text-align: center;
+    margin: 20px 10px;
+    font-size: 1.7rem;
+    color: #2176bd;
+  }
+
+  #searchBar {
+    display: block;
+    margin: 0 auto 25px auto;
+    padding: 12px 15px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #a8c4e5;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    background: white;
+    color: #333;
+    box-shadow: inset 0 0 8px #a8c4e540;
+    outline: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  #searchBar:focus {
+    box-shadow: 0 0 15px #2176bd80;
+    border-color: #2176bd;
+    background: #eaf4ff;
+  }
+
+  h3 {
+    margin-left: 5%;
+    font-size: 1.3rem;
+    color: #3a5f8a;
+  }
+
+  .item {
+    background: white;
+    margin: 10px 5%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(33, 118, 189, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    color: #333;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+  }
+
+  .item:hover {
+    background: #eaf4ff;
+    box-shadow: 0 6px 16px rgba(33, 118, 189, 0.2);
+  }
+
+  .item label {
+    margin-left: 10px;
+    font-weight: 600;
+  }
+
+  .item button {
+    margin-left: 10px;
+    padding: 10px 16px;
+    border: none;
+    background: #2176bd;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px #2176bd80;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .item button:hover {
+    background: #145a9e;
+    box-shadow: 0 4px 12px #145a9eaa;
+  }
+
+  .bottle-count {
+    font-weight: 700;
+    color: #145a9e;
+    font-size: 1.2rem;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 1002;
+    backdrop-filter: blur(6px);
+  }
+
+  #initialCountModal {
+    display: none;
+    position: fixed;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(33, 118, 189, 0.15);
+    z-index: 1003;
+    width: 90%;
+    max-width: 380px;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  #initialCountModal h3 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #2176bd;
+  }
+
+  #initialCountModal input {
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0 20px 0;
+    border: 1px solid #a8c4e5;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    background: #f7fbff;
+    color: #333;
+    outline: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  #initialCountModal input:focus {
+    box-shadow: 0 0 15px #2176bd80;
+    border-color: #2176bd;
+    background: #eaf4ff;
+  }
+
+  #initialCountModal button {
+    padding: 10px 16px;
+    margin: 8px 10px 0 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    min-width: 100px;
+  }
+
+  #saveInitialCountBtn {
+    background: #2176bd;
+    color: white;
+    box-shadow: 0 2px 12px #2176bd80;
+  }
+
+  #saveInitialCountBtn:hover {
+    background: #145a9e;
+  }
+
+  #initialCountModal button:last-child {
+    background: #e74c3c;
+    color: white;
+    box-shadow: 0 2px 12px #e74c3c80;
+  }
+
+  #initialCountModal button:last-child:hover {
+    background: #c0392b;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .item button {
+      margin: 8px 0 0 0;
+    }
+
+    #searchBar {
+      width: 95%;
+    }
+
+    .side-menu {
+      width: 80%;
+    }
+  }
+</style>
+
+</head>
+<header>
+  
+     <button class="menu-btn" onclick="toggleMenu()">☰</button>
+<a style="text-align: center;">AVANTI ACCOUNTS MANAGER</a>
+  </header>
+
+  <div class="side-menu" id="sideMenu">
+    <a href="index.html#con">Home</a>
+    <a href="index.html#comparisonReports">Audits</a>
+ <a href="inven.html">Inventory</a>
+<a href="empties.html">Empty Bottles</a>
+    <a href="about.html">About</a>
+   
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</header>
+<body>
+  <h2>Empty Bottle Tracker</h2>
+  <input type="text" id="searchBar" placeholder="Search items..." />
+  
+  <h3>Eligible Items</h3>
+  <div id="eligibleItems"></div>
+  
+  <h3>Ineligible Items</h3>
+  <div id="ineligibleItems"></div>
+
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div id="initialCountModal">
+    <h3>Enter Initial Bottle Count</h3>
+<p>how many empty bottles are there at the momment?</p>
+    <input type="number" id="initialCountInput" /><br><br>
+    <button id="saveInitialCountBtn">Save</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+apiKey: "AIzaSyCn2jpi2WbIEP17kFXet031PT_yDiHyaVc",
+  authDomain: "web-gallery-2c0fb.firebaseapp.com",
+  databaseURL: "https://web-gallery-2c0fb-default-rtdb.firebaseio.com",
+  projectId: "web-gallery-2c0fb",
+  storageBucket: "web-gallery-2c0fb.firebasestorage.app",
+  messagingSenderId: "152897183784",
+  appId: "1:152897183784:web:6bd0d1276404e2ff90151d",
+  measurementId: "G-6HVEHGXSH4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const eligibleDiv = document.getElementById("eligibleItems");
+    const ineligibleDiv = document.getElementById("ineligibleItems");
+    const searchBar = document.getElementById("searchBar");
+    const initialCountModal = document.getElementById("initialCountModal");
+    const initialCountInput = document.getElementById("initialCountInput");
+    const saveInitialCountBtn = document.getElementById("saveInitialCountBtn");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+
+    let eligibilityData = {};
+    let bottleCountMap = {};
+    let initialCounts = {};
+    let currentItem = "";
+
+    function closeModal() {
+      initialCountModal.style.display = "none";
+      modalBackdrop.style.display = "none";
+    }
+
+    async function fetchData() {
+      const [statsSnapshot, eligibilitySnapshot, initialCountsSnapshot] = await Promise.all([
+        db.ref("statistics").once("value"),
+        db.ref("eligibility").once("value"),
+        db.ref("initialCounts").once("value")
+      ]);
+
+      const statsData = statsSnapshot.val() || {};
+      eligibilityData = eligibilitySnapshot.val() || {};
+      initialCounts = initialCountsSnapshot.val() || {};
+
+      const dates = Object.keys(statsData).sort();
+      const counts = {};
+
+      for (let i = 0; i < dates.length - 1; i++) {
+        const currentDayItems = statsData[dates[i]];
+        const nextDayItems = statsData[dates[i + 1]] || {};
+
+        for (let key in currentDayItems) {
+          const item = currentDayItems[key];
+          const name = item.item ? item.item.trim() : "Unnamed Item";
+          const opening = Number(item.opening || 0);
+          const closing = Number(item.closing || 0);
+          const orders = Number(item.orders || 0);
+
+          let nextDayOrder = 0;
+          for (let nextKey in nextDayItems) {
+            const nextItem = nextDayItems[nextKey];
+            const nextItemName = nextItem.item ? nextItem.item.trim() : "Unnamed Item";
+            if (nextItemName === name) {
+              nextDayOrder = Number(nextItem.orders || 0);
+              break;
+            }
+          }
+
+          const initial = Number(initialCounts[name] || 0);
+          const bottleCount = opening + orders - closing - nextDayOrder + initial;
+
+          if (!counts[name]) counts[name] = 0;
+          counts[name] += bottleCount;
+        }
+      }
+
+      bottleCountMap = counts;
+      renderItems();
+    }
+
+    function renderItems() {
+      eligibleDiv.innerHTML = "";
+      ineligibleDiv.innerHTML = "";
+      const searchQuery = searchBar.value.toLowerCase();
+
+      for (const item in bottleCountMap) {
+        const count = bottleCountMap[item];
+        const isEligible = eligibilityData[item] === true;
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = isEligible;
+        checkbox.setAttribute("data-item", item);
+        checkbox.addEventListener("change", function () {
+          const itemName = this.getAttribute("data-item");
+          const isChecked = this.checked;
+
+          if (isChecked && initialCounts[itemName] === undefined) {
+            currentItem = itemName;
+            initialCountModal.style.display = "block";
+            modalBackdrop.style.display = "block";
+            this.checked = false;
+            return;
+          }
+
+          db.ref("eligibility/" + itemName).set(isChecked);
+        });
+
+        const label = document.createElement("label");
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" Eligible"));
+
+        const moreBtn = document.createElement("button");
+        moreBtn.textContent = "More";
+        moreBtn.addEventListener("click", () => {
+          currentItem = item;
+          initialCountInput.value = initialCounts[item] || 0;
+          initialCountModal.style.display = "block";
+          modalBackdrop.style.display = "block";
+        });
+
+        if (item.toLowerCase().includes(searchQuery)) {
+          if (isEligible) {
+            itemDiv.innerHTML = `
+              <div>
+                <strong>${item}</strong><br>
+                <span class="bottle-count">Bottle Count: ${count}</span>
+              </div>`;
+            itemDiv.appendChild(label);
+            itemDiv.appendChild(moreBtn);
+            eligibleDiv.appendChild(itemDiv);
+          } else {
+            itemDiv.innerHTML = `<strong>${item}</strong>`;
+            itemDiv.appendChild(label);
+            itemDiv.appendChild(moreBtn);
+            ineligibleDiv.appendChild(itemDiv);
+          }
+        }
+      }
+    }
+
+    saveInitialCountBtn.addEventListener("click", () => {
+      const value = Number(initialCountInput.value);
+      if (!isNaN(value)) {
+        db.ref("initialCounts/" + currentItem).set(value);
+        initialCounts[currentItem] = value;
+        initialCountModal.style.display = "none";
+        modalBackdrop.style.display = "none";
+        db.ref("eligibility/" + currentItem).set(true);
+      }
+    });
+
+    searchBar.addEventListener("input", renderItems);
+
+    db.ref("eligibility").on("value", (snapshot) => {
+      eligibilityData = snapshot.val() || {};
+      renderItems();
+    });
+
+    db.ref("initialCounts").on("value", (snapshot) => {
+      initialCounts = snapshot.val() || {};
+      renderItems();
+    });
+
+    fetchData();
+  </script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

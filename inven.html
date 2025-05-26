@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Previous Inventory - AVANTI</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background: rgba(0, 0, 0, 0.9);
+    color: #00e5ff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+    animation: glowHeader 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowHeader {
+    from { text-shadow: 0 0 5px #00e5ff; }
+    to { text-shadow: 0 0 20px #1de9b6; }
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 30px auto 150px auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 255, 0.05);
+  }
+
+  h1 {
+    text-align: center;
+    color: #00bcd4;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+  }
+
+  h2 {
+    margin-top: 0;
+    color: #00bcd4;
+    text-shadow: 0 0 4px rgba(0, 255, 255, 0.2);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+
+  th {
+    background-color: rgba(0, 255, 255, 0.08);
+    color: #00838f;
+  }
+
+  .loading {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+    font-style: italic;
+  }
+
+  .menu-btn {
+    font-size: 40px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #00e5ff;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    width: 70px;
+    z-index: 1002;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    transition: background 0.3s ease;
+  }
+
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: -500px;
+    width: 500px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: #e0f7fa;
+    padding-top: 60px;
+    transition: 0.4s ease;
+    box-shadow: 4px 0 20px rgba(0, 255, 255, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+    backdrop-filter: blur(6px);
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .side-menu a {
+    display: block;
+    padding: 20px 30px;
+    text-decoration: none;
+    color: #b2ebf2;
+    font-size: 30px;
+    font-weight: 500;
+    transition: 0.3s;
+    position: relative;
+  }
+
+  .side-menu a:hover {
+    background: rgba(29, 233, 182, 0.1);
+    color: #ffffff;
+    transform: translateX(10px);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+  }
+
+  .side-menu.active {
+    left: 0;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (max-width: 600px) {
+    .side-menu {
+      width: 200px;
+    }
+
+    .side-menu a {
+      font-size: 20px;
+    }
+  }
+
+  footer {
+    background-color: #111;
+    color: #00e5ff;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    font-size: 14px;
+  }
+
+  footer a {
+    color: #00e5ff;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  footer p {
+    margin: 0;
+  }
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>AVANTI ACCOUNTS MANAGER</h1>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  </header>
+
+  <div class="side-menu" id="sideMenu">
+    <a href="index.html">Home</a>
+    <a href="index.html#comparisonReports">Audits</a>
+    <a href="inven.html">Inventory</a>
+    <a href="empties.html">Empty bottles</a>
+     <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</header>
+
+<div class="container">
+  <h2>📦 View Inventory </h2>
+  <div id="inventoryContent" class="loading">Loading inventory...</div>
+</div>
+
+  <footer>
+<div style="text-align: center; color: #999; padding: 20px; font-size: 14px; ">
+  &copy; 2025 Avanti accounts | Developed by <br>
+Mwelaisha Clement Shaba | Avanti corporation. All rights reserved
+</div>
+
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCn2jpi2WbIEP17kFXet031PT_yDiHyaVc",
+  authDomain: "web-gallery-2c0fb.firebaseapp.com",
+  databaseURL: "https://web-gallery-2c0fb-default-rtdb.firebaseio.com",
+  projectId: "web-gallery-2c0fb",
+  storageBucket: "web-gallery-2c0fb.firebasestorage.app",
+  messagingSenderId: "152897183784",
+  appId: "1:152897183784:web:6bd0d1276404e2ff90151d",
+  measurementId: "G-6HVEHGXSH4"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const statisticsRef = db.ref('statistics');
+
+  statisticsRef.once('value')
+    .then(snapshot => {
+      const statsData = snapshot.val();
+      const container = document.getElementById('inventoryContent');
+
+      if (!statsData) {
+        container.innerHTML = '<p>No statistics data found.</p>';
+        return;
+      }
+
+      const allDates = Object.keys(statsData).sort((a, b) => new Date(b) - new Date(a));
+
+      if (allDates.length < 2) {
+        container.innerHTML = '<p>Not enough data for previous day.</p>';
+        return;
+      }
+
+      const previousDate = allDates[1];
+      const currentDate= allDates[0];
+      const prevItems = statsData[previousDate];
+
+      let tableHTML = `<p><strong>The last time you balanced your books (${previousDate}) showed you have this in Inventory.</strong></p>`;
+      tableHTML += `
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      Object.values(prevItems).forEach(entry => {
+        const item = entry.item || 'Unnamed';
+        const closing = entry.closing ?? 'N/A';
+        tableHTML += `
+          <tr>
+            <td>${item}</td>
+            <td>${closing}</td>
+          </tr>
+        `;
+      });
+
+      tableHTML += '</tbody></table>';
+      container.innerHTML = tableHTML;
+    })
+    .catch(error => {
+      console.error('Error fetching inventory:', error);
+      document.getElementById('inventoryContent').innerHTML = '<p>Error loading data.</p>';
+    });
+</script>
+
+</body>
+</html>

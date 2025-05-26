@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About AVANTI ACCOUNTS MANAGER</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    overflow-x: hidden;
+  }
+
+  header {
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: glowBorder 4s infinite alternate;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @keyframes glowBorder {
+    0% { box-shadow: 0 0 10px #1de9b6; }
+    100% { box-shadow: 0 0 25px #00e5ff; }
+  }
+
+  .container {
+    padding: 40px 20px;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  h2 {
+    color: #00bcd4;
+    border-bottom: 2px solid #00acc1;
+    padding-bottom: 5px;
+  }
+
+  .card {
+    background: white;
+    padding: 25px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card h3 {
+    margin-top: 0;
+    color: #00bcd4;
+  }
+
+  .card p {
+    line-height: 1.6;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    background: #111;
+    color: #bbb;
+    margin-top: 40px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease;
+    box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.05);
+  }
+
+  footer.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  a {
+    color: #00bcd4;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    width: 50px;
+    z-index: 1002;
+    transition: background 0.3s ease;
+  }
+
+  /* Slide Menu */
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: #e0f7fa;
+    padding-top: 60px;
+    transition: left 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 4px 0 20px rgba(0, 255, 255, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+  }
+
+  .side-menu a {
+    display: block;
+    padding: 18px 30px;
+    text-decoration: none;
+    color: #b2ebf2;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .side-menu a::before {
+    content: '';
+    position: absolute;
+    left: 25px;
+    bottom: 12px;
+    width: 0%;
+    height: 2px;
+    background: #1de9b6;
+    box-shadow: 0 0 10px #1de9b6;
+    transition: width 0.3s ease;
+  }
+
+  .side-menu a:hover {
+    background: rgba(29, 233, 182, 0.1);
+    color: #ffffff;
+    transform: translateX(10px);
+  }
+
+  .side-menu a:hover::before {
+    width: 60%;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+  }
+
+  .side-menu.active {
+    left: 0;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (max-width: 600px) {
+    .side-menu {
+      width: 200px;
+    }
+  }
+</style>
+
+</head>
+<body>
+
+  <header>
+    <h1>AVANTI ACCOUNTS MANAGER</h1>
+    <p>Your Business. Your Numbers. Simplified.</p>
+  </header>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <div class="side-menu" id="sideMenu">
+    <a href="index.html">Home</a>
+    <a href="index.html#comparisonReports">Audits</a>
+    <a href="inven.html">Inventory</a>
+    <a href="empties.html">Empty Bottles</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+
+
+  <div class="container">
+    <div class="card">
+      <h2>Overview</h2>
+      <p><strong>AVANTI ACCOUNTS MANAGER</strong> is a modern web-based application designed bespoke and customized for Rumwel liquor store to help manage their inventory, finances, sales, and auditing operations — all in one place.</p>
+    </div>
+
+    <div class="card">
+      <h3>📊 Statistics Section</h3>
+      <p>This section allows users to track key metrics like <strong>Opening Stock</strong>, <strong>Orders</strong>, <strong>Sales</strong>, <strong>Closing Stock</strong>, and <strong>Total Revenue</strong>. It supports date navigation and search functionality for quick access to specific data.</p>
+    </div>
+
+    <div class="card">
+      <h3>💸 Revenue & Liabilities</h3>
+      <p>Manage your business expenses, debts, and liabilities with ease. Add expense categories, record creditor info, and track how much is owed or paid.</p>
+    </div>
+
+    <div class="card">
+      <h3>💰 Income Tracking</h3>
+      <p>Record and categorize different income sources like received payments and other revenue streams to get a clearer view of your earnings.</p>
+    </div>
+
+    <div class="card">
+      <h3>📝 Comments & Notes</h3>
+      <p>Use this section to jot down important observations or daily business notes. This promotes transparency and accountability across business operations.</p>
+    </div>
+
+    <div class="card">
+      <h3>📈 Turnover & Profit Analysis</h3>
+      <p>See a breakdown of total incomes, liabilities, gross/net profit, and other key performance indicators. Perfect for daily or monthly financial review.</p>
+    </div>
+
+    <div class="card">
+      <h3>🔍 Auditing & Reports</h3>
+      <p>Compare physical sales vs recorded sales and generate instant audit reports for internal checks or investor presentations.</p>
+    </div>
+
+    <div class="card">
+      <h3>📤 Share Feature</h3>
+      <p>Send summaries and reports directly via email or export them for external use. Stay connected and share your data securely.</p>
+    </div>
+
+    <div class="card">
+      <h3>🎯 Who Is It For?</h3>
+      <p>This webite has been customized specifically for Rumwel liquor store — AVANTI is your daily tool for staying on top of numbers.</p>
+    </div>
+
+    <div class="card">
+      <h3>🛠 Built With Simplicity</h3>
+      <p>Intuitive UI, clean design, fast performance, and works on desktop or mobile browsers. No login required — just load and go.</p>
+    </div>
+
+    <div class="card">
+      <h3>🔗 Explore the App</h3>
+      <p><a href="index.html">Click here to go back to AVANTI ACCOUNTS MANAGER</a></p>
+    </div>
+  </div>
+
+  <footer>
+<div style="text-align: center; color: #999; padding: 20px; font-size: 14px; ">
+  &copy; 2025 Avanti accounts | Developed by <br>
+Mwelaisha Clement Shaba | Avanti corporation. All rights reserved
+</div>
+
+  </footer>
+
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.card, footer').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

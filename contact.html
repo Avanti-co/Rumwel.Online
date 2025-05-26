@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About AVANTI ACCOUNTS MANAGER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    margin: 0;
+    padding: 0;
+    color: #e0f7fa;
+  }
+
+  header {
+    background: rgba(15, 32, 39, 0.95);
+    color: #1de9b6;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 1.6em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.2);
+    animation: fadeIn 1.5s;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    margin-top: 120px;
+    color: #e0f7fa;
+  }
+
+  h2 {
+    color: #1de9b6;
+    animation: slideIn 1s;
+  }
+
+  p {
+    line-height: 1.7;
+    font-size: 16px;
+    animation: fadeIn 1.5s;
+  }
+
+  .section {
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .contact-info {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-left: 5px solid #1de9b6;
+    border-radius: 8px;
+    animation: fadeIn 1.5s;
+  }
+
+  .contact-info p {
+    margin: 10px 0;
+    color: #b2ebf2;
+  }
+
+  .footer {
+    text-align: center;
+    color: #80deea;
+    padding: 20px;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1.5s;
+  }
+
+  .menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: none;
+    color: #1de9b6;
+    padding: 8px 12px;
+    position: fixed;
+    top: 25px;
+    left: 10px;
+    border-radius: 4px;
+    z-index: 1003;
+    transition: background 0.3s ease;
+  }
+
+  .menu-btn:hover {
+    background-color: rgba(29, 233, 182, 0.2);
+  }
+
+  /* Slide Menu */
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: #e0f7fa;
+    padding-top: 70px;
+    transition: left 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 4px 0 20px rgba(0, 255, 255, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+    border-right: 2px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+  }
+
+  .side-menu a {
+    display: block;
+    padding: 18px 30px;
+    text-decoration: none;
+    color: #b2ebf2;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .side-menu a::before {
+    content: '';
+    position: absolute;
+    left: 25px;
+    bottom: 12px;
+    width: 0%;
+    height: 2px;
+    background: #1de9b6;
+    box-shadow: 0 0 10px #1de9b6;
+    transition: width 0.3s ease;
+  }
+
+  .side-menu a:hover {
+    background: rgba(29, 233, 182, 0.1);
+    color: #ffffff;
+    transform: translateX(10px);
+  }
+
+  .side-menu a:hover::before {
+    width: 60%;
+  }
+
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 1000;
+  }
+
+  .side-menu.active {
+    left: 0;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (max-width: 600px) {
+    .side-menu {
+      width: 200px;
+    }
+
+    .container {
+      padding: 20px;
+      margin-top: 100px;
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>
+
+</head>
+<body>
+
+<header>
+  AVANTI ACCOUNTS MANAGER
+     <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  </header>
+
+  <div class="side-menu" id="sideMenu">
+    <a href="index.html#con">Home</a>
+    <a href="index.html#comparisonReports">Audits</a>
+ <a href="inven.html">Inventory</a>
+ <a href="empties.html">Empty bottles</a>
+    <a href="about.html">About</a>
+
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+</header>
+
+<div class="container">
+  <div class="section">
+    <h2>About This Platform</h2>
+    <p>
+      The AVANTI ACCOUNTS MANAGER is a powerful web-based system designed to help businesses manage their inventory, sales, orders, auditing, and financial data all in one place. Built for Rumwel Liquor Store, it provides a sleek, user-friendly interface for capturing stock entries, analyzing income and expenses, viewing audit reports, and maintaining a clear financial overview.
+    </p>
+    <p>
+      Features include real-time data tracking, automatic calculations of profit margins, smart inventory statistics, and secure storage with Firebase. It's an ideal solution for small to medium businesses seeking reliable digital bookkeeping.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Who Is It For?</h2>
+    <p>
+      - Shop owners who need to keep track of stock and sales daily.<br>
+      - Accountants who want quick access to audit reports.<br>
+      - Managers who want to view turnover and profit margins at a glance.<br>
+      - Any business needing an organized, cloud-based account manager.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Contact & Support</h2>
+    <div class="contact-info">
+      <p><strong>Developer:</strong> Mwelaisha Shaba</p>
+      <p><strong>Email:</strong> mweshaba@icloud.com</p>
+      <p><strong>Phone:</strong> +260 766512632</p>
+      <p><strong>WhatsApp:</strong> +260 766512632</p>
+      <p><strong>Location:</strong> Lusaka, Zambia</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  &copy; 2025 Avanti corporation. All rights reserved.
+</div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    // Scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.section');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+
+</body>
+</html>
